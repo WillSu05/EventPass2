@@ -1,13 +1,24 @@
 package com.example.Evento;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication
-public class EventoApplication {
+@Configuration
+public class SwaggerConfiguration {
+	@Bean
+	public OpenAPI customOpenAPI() {
+		return new OpenAPI()
+				.info(new Info()
+						.title("API EventPass")
+						.version("1.0")
+						.description("Docunentacion de la API para  eventPass")
+						.contact(new Contact()
+								.name("Soporte API")
+								.email("---")));
 
-	public static void main(String[] args) {
-		SpringApplication.run(EventoApplication.class, args);
 	}
 
 }
