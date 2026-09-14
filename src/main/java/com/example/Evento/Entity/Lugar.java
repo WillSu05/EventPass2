@@ -2,6 +2,8 @@ package com.example.Evento.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "lugar")
@@ -19,4 +21,8 @@ public class Lugar {
 
     @Column(name = "capacidad")
     private int capacidad;
+
+    @OneToMany(mappedBy = "lugar", cascade = CascadeType.ALL)
+    private List<Evento> eventos;
+
 }

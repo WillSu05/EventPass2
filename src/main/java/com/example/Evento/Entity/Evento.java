@@ -33,4 +33,8 @@ public class Evento {
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<TipoEntrada> tiposEntrada;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lugar_id", nullable = false)
+    private Lugar lugar;
+
 }
