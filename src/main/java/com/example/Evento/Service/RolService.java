@@ -1,4 +1,4 @@
 package com.example.Evento.Service;
 
-public class RolSer {
+public class RolService {
 }
