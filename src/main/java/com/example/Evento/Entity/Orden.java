@@ -3,6 +3,8 @@ package com.example.Evento.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orden")
@@ -23,4 +25,12 @@ public class Orden {
 
     @Column(name = "fecha")
     private LocalDateTime fecha;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Entrada> entradas = new ArrayList<>();
+
 }

@@ -3,6 +3,8 @@ package com.example.Evento.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tipoEntrada")
 @NoArgsConstructor
@@ -21,4 +23,12 @@ public class TipoEntrada {
     private int cantidadTotal;
     @Column(name = "disponible", nullable = false)
     private int disponible;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evento_id", nullable = false)
+    private Evento evento;
+
+    @OneToMany(mappedBy = "tipoEntrada", cascade = CascadeType.ALL)
+    private List<Entrada> entradas;
+
 }
