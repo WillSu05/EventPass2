@@ -17,5 +17,12 @@ public class Validacion {
     @Column(name = "resultadoValidacion", nullable = false)
     private String resultadoValidacion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entrada_id", nullable = false)
+    private Entrada entrada;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "validador_id", nullable = false)
+    private Usuario validador;
 
 }

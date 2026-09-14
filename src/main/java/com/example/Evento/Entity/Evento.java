@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,5 +25,12 @@ public class Evento {
     private String descripcion;
     @Column(name = "fecha_hora")
     private LocalDateTime fechaHora;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizador_id", nullable = false)
+    private Usuario organizador;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    private List<TipoEntrada> tiposEntrada;
 
 }
