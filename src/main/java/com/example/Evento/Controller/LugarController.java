@@ -18,7 +18,7 @@ public class LugarController {
     public List<Lugar> listar() {
         return lugarService.listarLugares();
     }
-    @GetMapping("/{id}")
+    @GetMapping("buscar/{id}")
     public ResponseEntity<Lugar> buscarPorId(@PathVariable Long id) {
         return lugarService.buscarPorId(id)
                 .map(ResponseEntity::ok)
