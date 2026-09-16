@@ -2,34 +2,39 @@ package com.example.Evento.Entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "usuario")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class    Usuario {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(name = "nombre")
-    private String nombre;
+    protected String nombre;
 
     @Email(message = "Debe ser un formato de correo válido")
     @Column(name = "correo", unique = true, nullable = false)
-    private String correo;
+    protected String correo;
 
     @Column(name = "documento", unique = true, nullable = false)
-    private String documento;
+    protected String documento;
 
     @Column(name = "fechaNacimiento", nullable = false)
-    private LocalDate fechaNacimiento;
+    protected LocalDate fechaNacimiento;
 
     @Column(name = "contraseña", nullable = false)
-    private String contraseña;
+    protected String contraseña;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rol_id", nullable = false)
