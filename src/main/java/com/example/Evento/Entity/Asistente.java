@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Aisistente extends Usuario{
+public class Asistente extends Usuario{
 
     @OneToMany(mappedBy = "usuarioComprador")
     private List<Orden> ordenes;
