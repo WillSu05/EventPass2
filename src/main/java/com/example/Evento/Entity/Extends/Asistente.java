@@ -4,12 +4,14 @@ import com.example.Evento.Entity.Orden;
 import com.example.Evento.Entity.Usuario;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
+@Table(name = "asistente")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Asistente extends Usuario {
