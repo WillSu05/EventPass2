@@ -1,9 +1,8 @@
 package com.example.Evento.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -28,6 +27,9 @@ public class Lugar {
     @Column(name = "capacidad")
     private int capacidad;
 
+    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "lugar", cascade = CascadeType.ALL)
     private List<Evento> eventos;
 
