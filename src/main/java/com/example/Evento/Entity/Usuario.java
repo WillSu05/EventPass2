@@ -8,7 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class    Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
