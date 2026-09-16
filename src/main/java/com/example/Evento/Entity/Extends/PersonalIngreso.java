@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "personal_Ingreso")
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonalIngreso extends Usuario {
