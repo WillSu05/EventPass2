@@ -1,5 +1,7 @@
 package com.example.Evento.Service.IMPL;
 
+import com.example.Evento.DTO.Request.RolRequestDTO;
+import com.example.Evento.DTO.Response.RolResponseDTO;
 import com.example.Evento.Entity.Rol;
 import com.example.Evento.Repository.RolRepository;
 import com.example.Evento.Service.RolService;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,40 +19,24 @@ public class RolServiceImpl implements RolService {
 
     private final RolRepository rolRepository;
 
-    @Override
-    public List<Rol> listarTodos() {
-        return rolRepository.findAll();
+    private RolResponseDTO convertirADto(Rol rol) {
+        RolResponseDTO dto = new RolResponseDTO();
+        dto.setId(rol.getId());
+        dto.setNombre(rol.getNombre());
+        return dto;
     }
 
     @Override
-    public Rol buscarPorId(Long id) {
-        return rolRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + id));
+    public List<RolResponseDTO> listarRoles() {
+        return rolRepository.findAll().stream()
+                .map(this::convertirADto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public Rol registrarRol(Rol rol) {
-        if (rol.getNombre() != null && rolRepository.existsByNombre(rol.getNombre())) {
-            throw new RuntimeException("El rol ya existe: " + rol.getNombre());
-        }
-        return rolRepository.save(rol);
-    }
-
-    @Override
-    @Transactional
-    public Rol actualizarRol(Long id, Rol detalles) {
-        Rol rol = buscarPorId(id);
-        rol.setNombre(detalles.getNombre());
-        return rolRepository.save(rol);
-    }
-
-    @Override
-    @Transactional
-    public void eliminarRol(Long id) {
-        if (!rolRepository.existsById(id)) {
-            throw new RuntimeException("Rol no encontrado con ID: " + id);
-        }
-        rolRepository.deleteById(id);
+    public RolResponseDTO crearRol(RolRequestDTO requestDTO) {
+        Rol rol = new Rol();
+        rol.setNombre(requestDTO.getNombre());
+        return convertirADto(rolRepository.save(rol));
     }
 }
