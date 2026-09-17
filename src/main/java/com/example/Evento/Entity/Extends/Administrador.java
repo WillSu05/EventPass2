@@ -11,8 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "administrador")
-@DiscriminatorValue("Administrador")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
