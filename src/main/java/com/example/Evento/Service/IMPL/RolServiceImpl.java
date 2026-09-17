@@ -21,7 +21,6 @@ public class RolServiceImpl implements RolService {
 
     private RolResponseDTO convertirADto(Rol rol) {
         RolResponseDTO dto = new RolResponseDTO();
-        dto.setId(rol.getId());
         dto.setNombre(rol.getNombre());
         return dto;
     }
