@@ -1,8 +1,5 @@
 package com.example.Evento.DTO.Response;
 
-import lombok.Data;
-
-@Data
-public class RolResponseDTO {
+public class EstadoEventoResponseDTO {
     private String nombre;
 }
