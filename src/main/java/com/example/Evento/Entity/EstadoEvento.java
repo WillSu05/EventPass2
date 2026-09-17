@@ -1,9 +1,10 @@
 package com.example.Evento.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "estado_evento")
@@ -18,4 +19,10 @@ public class EstadoEvento {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "estadoEvento")
+    private List<Evento> eventos;
 }
