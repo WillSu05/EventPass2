@@ -1,5 +1,7 @@
 package com.example.Evento.Controller;
 
+import com.example.Evento.DTO.Request.RolRequestDTO;
+import com.example.Evento.DTO.Response.RolResponseDTO;
 import com.example.Evento.Entity.Rol;
 import com.example.Evento.Service.RolService;
 import lombok.RequiredArgsConstructor;
@@ -15,30 +17,13 @@ import java.util.List;
 public class RolController {
 
     private final RolService rolService;
-
-    @GetMapping
-    public ResponseEntity<List<Rol>> listarTodos() {
-        return ResponseEntity.ok(rolService.listarTodos());
+    @GetMapping("/listarRoles")
+    public List<RolResponseDTO> listar() {
+        return rolService.listarRoles();
+    }
+    @PostMapping("/crearRol")
+    public RolResponseDTO crear(@RequestBody RolRequestDTO request) {
+        return rolService.crearRol(request);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Rol> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(rolService.buscarPorId(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Rol> registrar(@RequestBody Rol rol) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rolService.registrarRol(rol));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Rol> actualizar(@PathVariable Long id, @RequestBody Rol detalles) {
-        return ResponseEntity.ok(rolService.actualizarRol(id, detalles));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        rolService.eliminarRol(id);
-        return ResponseEntity.noContent().build();
-    }
 }
