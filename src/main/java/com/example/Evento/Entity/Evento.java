@@ -45,4 +45,11 @@ public class Evento {
     @JoinColumn(name = "lugar_id", nullable = false)
     private Lugar lugar;
 
+    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne
+    @JoinColumn(name = "id_estado_evento")
+    private EstadoEvento estado;
+
 }
