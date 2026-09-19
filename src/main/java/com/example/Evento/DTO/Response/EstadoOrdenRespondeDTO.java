@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolResponseDTO {
+public class EstadoOrdenRespondeDTO {
     private String nombre;
 }
