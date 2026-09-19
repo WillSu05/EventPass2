@@ -16,10 +16,10 @@ public class EstadoEventoController {
     private final EstadoEventoService estadoEventoService;
 
     @GetMapping("/listarEstadosEvento")
-    public List<EstadoEventoResponseDTO> listar() {
+    public List<EstadoEventoResponseDTO> listarEstadoEvento() {
         return estadoEventoService.listarEstadoEvento(); }
 
     @PostMapping("/crearEstadoEvento")
-    public EstadoEventoResponseDTO crear(@RequestBody EstadoEventoRequestDTO request) {
+    public EstadoEventoResponseDTO crearEstadoEvento (@RequestBody EstadoEventoRequestDTO request) {
         return estadoEventoService.crearEstadoEvento(request); }
 }
