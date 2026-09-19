@@ -23,6 +23,6 @@ public class EstadoEvento {
     @JsonManagedReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "estadoEvento")
+    @OneToMany(mappedBy = "estado")
     private List<Evento> eventos;
 }
