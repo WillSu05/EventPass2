@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tipoEntrada")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TipoEntrada {

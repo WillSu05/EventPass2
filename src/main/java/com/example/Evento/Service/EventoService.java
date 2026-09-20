@@ -3,7 +3,6 @@ package com.example.Evento.Service;
 import com.example.Evento.DTO.Request.EventoRequestDTO;
 import com.example.Evento.DTO.Response.EventoResponseDTO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventoService {
@@ -11,7 +10,7 @@ public interface EventoService {
     EventoResponseDTO buscarEventoPorId(Long id);
     EventoResponseDTO crearEvento(EventoRequestDTO request);
     EventoResponseDTO actualizarEvento(Long id, EventoRequestDTO request);
-    EventoResponseDTO publicarEvento(Long id);
+    EventoResponseDTO publicarEvento(Long id, EventoRequestDTO requestDTO);
     void eliminarEvento(Long id);
 
 }

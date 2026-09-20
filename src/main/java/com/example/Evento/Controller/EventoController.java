@@ -4,11 +4,9 @@ import com.example.Evento.DTO.Request.EventoRequestDTO;
 import com.example.Evento.DTO.Response.EventoResponseDTO;
 import com.example.Evento.Service.EventoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -50,9 +48,9 @@ public class EventoController {
     }
 
     @PatchMapping("/{id}/publicarEvento")
-    public ResponseEntity<EventoResponseDTO> publicar(@PathVariable Long id) {
+    public ResponseEntity<EventoResponseDTO> publicar(@PathVariable Long id, EventoRequestDTO requestDTO) {
         try {
-            return ResponseEntity.ok(eventoService.publicarEvento(id));
+            return ResponseEntity.ok(eventoService.publicarEvento(id, requestDTO));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }

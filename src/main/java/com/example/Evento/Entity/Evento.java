@@ -49,7 +49,7 @@ public class Evento {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JoinColumn(name = "id_estado_evento")
+    @JoinColumn(name = "estado_id")
     private EstadoEvento estado;
 
 }
