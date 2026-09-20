@@ -1,5 +1,7 @@
 package com.example.Evento.Controller;
 
+import com.example.Evento.DTO.Request.LugarRequestDTO;
+import com.example.Evento.DTO.Response.LugarResponseDTO;
 import com.example.Evento.Entity.Lugar;
 import com.example.Evento.Service.LugarService;
 import lombok.RequiredArgsConstructor;
@@ -14,35 +16,46 @@ import java.util.List;
 public class LugarController {
     private final LugarService lugarService;
 
-    @GetMapping("/all")
-    public List<Lugar> listar() {
+    @GetMapping("/listarLugares")
+    public List<LugarResponseDTO> listar() {
         return lugarService.listarLugares();
     }
-    @GetMapping("buscar/{id}")
-    public ResponseEntity<Lugar> buscarPorId(@PathVariable Long id) {
-        return lugarService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    @PostMapping("/crear")
-    public Lugar crear(@RequestBody Lugar lugar) {
-        return lugarService.crearLugar(lugar);
-    }
 
-    @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Lugar> actualizar(@PathVariable Long id, @RequestBody Lugar lugarDetalles) {
+    @GetMapping("/buscarLugar/{id}")
+    public ResponseEntity<LugarResponseDTO> buscarPorId(@PathVariable Long id) {
         try {
-            Lugar actualizado = lugarService.actualizarLugar(id, lugarDetalles);
-            return ResponseEntity.ok(actualizado);
+            return ResponseEntity.ok(lugarService.buscarLugarPorId(id));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/eliminar/{id}")
+    @PostMapping("/crearLugar")
+    public ResponseEntity<LugarResponseDTO> crear(@RequestBody LugarRequestDTO request) {
+        try {
+            return ResponseEntity.ok(lugarService.crearLugar(request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/actualizarLugar/{id}")
+    public ResponseEntity<LugarResponseDTO> actualizar(@PathVariable Long id, @RequestBody LugarRequestDTO request) {
+        try {
+            return ResponseEntity.ok(lugarService.actualizarLugar(id, request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/eliminarLugar/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        lugarService.eliminarLugar(id);
-        return ResponseEntity.noContent().build();
+        try {
+            lugarService.eliminarLugar(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
