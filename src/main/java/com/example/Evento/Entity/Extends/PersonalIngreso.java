@@ -16,4 +16,8 @@ public class PersonalIngreso extends Usuario {
     @OneToMany(mappedBy = "validador")
     private List<Validacion> validaciones;
 
+    @Column(name = "turno")
+    private String turno;
+    @Column(name = "puerta")
+    private String puertaAsignada;
 }
