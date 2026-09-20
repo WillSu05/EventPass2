@@ -22,14 +22,15 @@ public class Orden {
     @Column(name = "id_usuario_comprador")
     private Long idUsuario_Comprador;
 
-    @Column(name = "id_estado_orden")
-    private Long idEstadoOrden;
-
     @Column(name = "total")
     private Double total;
 
     @Column(name = "fecha")
     private LocalDateTime fecha;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado_orden", nullable = false)
+    private EstadoOrden estadoOrden;
 
     @JsonManagedReference
     @ToString.Exclude
