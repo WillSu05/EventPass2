@@ -46,10 +46,10 @@ public class AdministradorServiceImpl implements AdministradorService {
         admin.setCorreo(detalles.getCorreo());
         admin.setDocumento(detalles.getDocumento());
         admin.setFechaNacimiento(detalles.getFechaNacimiento());
-        admin.setTipo(detalles.getTipo()); // Mapeo del campo tipo
 
-        if (detalles.getContraseña() != null && !detalles.getContraseña().isBlank()) {
-            admin.setContraseña(detalles.getContraseña());
+
+        if (detalles.getContrasena() != null && !detalles.getContrasena().isBlank()) {
+            admin.setContrasena(detalles.getContrasena());
         }
         if (detalles.getRol() != null) {
             admin.setRol(detalles.getRol());
