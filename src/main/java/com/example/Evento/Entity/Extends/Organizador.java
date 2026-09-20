@@ -19,5 +19,8 @@ public class Organizador extends Usuario {
     @OneToMany(mappedBy = "organizador")
     private List<Evento> eventos;
 
+    @OneToMany(mappedBy = "usuarioCreador")
+    private List<Lugar> lugares;
+
 
 }

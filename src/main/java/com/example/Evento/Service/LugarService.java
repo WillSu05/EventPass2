@@ -1,13 +1,15 @@
 package com.example.Evento.Service;
 
+import com.example.Evento.DTO.Request.LugarRequestDTO;
+import com.example.Evento.DTO.Response.LugarResponseDTO;
 import com.example.Evento.Entity.Lugar;
 
 import java.util.*;
 
 public interface LugarService {
-    List<Lugar> listarLugares();
-    Optional<Lugar> buscarPorId(Long id);
-    Lugar crearLugar(Lugar lugar);
-    Lugar actualizarLugar(Long id, Lugar lugarDetalles);
-    void eliminarLugar(Long id);
+    List<LugarResponseDTO> listarLugares();
+    LugarResponseDTO buscarLugarPorId(Long id);
+    LugarResponseDTO crearLugar(LugarRequestDTO request);
+    LugarResponseDTO actualizarLugar(Long id, LugarRequestDTO request);
+    void eliminarLugar(Long id);;
 }

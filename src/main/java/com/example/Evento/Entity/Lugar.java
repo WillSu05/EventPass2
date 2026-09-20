@@ -1,5 +1,6 @@
 package com.example.Evento.Entity;
 
+import com.example.Evento.Entity.Extends.Organizador;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,10 @@ public class Lugar {
 
     @Column(name = "capacidad")
     private int capacidad;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario_creador")
+    private Organizador usuarioCreador;
 
     @JsonManagedReference
     @ToString.Exclude
