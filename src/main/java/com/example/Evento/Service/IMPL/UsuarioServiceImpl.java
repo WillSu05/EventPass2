@@ -32,8 +32,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .map(u -> new UsuarioResponseDTO(
                         u.getNombre(),
                         u.getCorreo(),
-                        u.getRol().getNombre(),
-                        u.getClass().getSimpleName() // Devuelve dinámicamente "Asistente", "Organizador", etc.
+                        u.getRol().getNombre()
                 ))
                 .collect(Collectors.toList());
     }
@@ -44,8 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .map(u -> new UsuarioResponseDTO(
                         u.getNombre(),
                         u.getCorreo(),
-                        u.getRol().getNombre(),
-                        u.getClass().getSimpleName()
+                        u.getRol().getNombre()
                 ))
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
     }
@@ -53,27 +51,27 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public UsuarioResponseDTO registrarUsuario(UsuarioRequestDTO request) {
         Rol rol = rolRepository.findById(request.getRolId())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + request.getRolId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado con ID: " + request.getRolId()));
 
         Usuario nuevoUsuario;
-        String nombreRol = rol.getNombre().toUpperCase();
-        if (nombreRol.contains("ASISTENTE")) {
+        String nombreRol = rol.getNombre();
+        if (nombreRol.contains("Asistemte")) {
             nuevoUsuario = new Asistente();
-        } else if (nombreRol.contains("ORGANIZADOR")) {
+        } else if (nombreRol.contains("Organizador")) {
             Organizador org = new Organizador();
             nuevoUsuario = org;
-        } else if (nombreRol.contains("ADMIN")) {
+        } else if (nombreRol.contains("Administrador")) {
             Administrador admin = new Administrador();
             nuevoUsuario = admin;
-        } else if (nombreRol.contains("INGRESO") || nombreRol.contains("PERSONAL")) {
+        } else if (nombreRol.contains("Ingreso") || nombreRol.contains("Personal")) {
             nuevoUsuario = new PersonalIngreso();
         } else {
-            throw new RuntimeException("Tipo de rol no reconocido para instanciar una clase");
+            throw new ResourceNotFoundException("Tipo de rol no reconocido para instanciar una clase"+nombreRol);
         }
 
         nuevoUsuario.setNombre(request.getNombre());
         nuevoUsuario.setCorreo(request.getCorreo());
-        nuevoUsuario.setFechaNacimiento(LocalDate.parse(request.getFechaNacimiento()));
+        nuevoUsuario.setFechaNacimiento(request.getFechaNacimiento());
         nuevoUsuario.setDocumento(request.getDocumento());
         nuevoUsuario.setContrasena(request.getContrasena());
         nuevoUsuario.setRol(rol);
@@ -83,9 +81,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         return new UsuarioResponseDTO(
                 guardado.getNombre(),
                 guardado.getCorreo(),
-                guardado.getRol().getNombre(),
-                guardado.getClass().getSimpleName()
+                guardado.getRol().getNombre()
         );
+
     }
 
     @Override

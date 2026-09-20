@@ -1,15 +1,18 @@
 package com.example.Evento.DTO.Request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class UsuarioRequestDTO {
     private String nombre;
     private String correo;
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String documento;
     private String contrasena;
+    @JsonProperty("rol_id")
     private Long rolId;
-    private String tipo;
 
 }
