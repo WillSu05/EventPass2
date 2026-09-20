@@ -14,11 +14,11 @@ import java.util.List;
 public class EstadoOrdenController {
     private final EstadoOrdenService service;
 
-    @GetMapping
+    @GetMapping("/listarEstadosOrden")
     public List<EstadoOrdenRespondeDTO> listar() {
         return service.listarEstados(); }
 
-    @PostMapping
+    @PostMapping("/crearEstadoOrden")
     public EstadoOrdenRespondeDTO crear(@RequestBody EstadoOrdenRequestDTO request) {
         return service.crearEstado(request); }
 }

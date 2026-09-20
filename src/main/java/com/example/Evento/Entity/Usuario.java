@@ -1,6 +1,5 @@
 package com.example.Evento.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -14,6 +13,8 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
 @Entity
 @Table(name = "usuario")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,8 +37,8 @@ public abstract class Usuario {
     @Column(name = "fechaNacimiento", nullable = false)
     protected LocalDate fechaNacimiento;
 
-    @Column(name = "contraseña", nullable = false)
-    protected String contraseña;
+    @Column(name = "contrasena", nullable = false)
+    protected String contrasena;
 
     @JsonManagedReference
     @ToString.Exclude
@@ -57,5 +58,6 @@ public abstract class Usuario {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Orden> ordenes;
+
 
 }
