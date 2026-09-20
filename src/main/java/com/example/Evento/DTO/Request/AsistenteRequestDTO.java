@@ -7,5 +7,4 @@ public class AsistenteRequestDTO {
     private String nombre;
     private String email;
     private String password;
-    private String telefono;
 }
