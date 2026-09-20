@@ -12,4 +12,5 @@ public class EventoRequestDTO {
     private LocalDateTime fechaHora;
     private Long lugarId;
     private Long organizadorId;
+    private Long estadoId;
 }

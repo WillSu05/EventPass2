@@ -2,12 +2,14 @@ package com.example.Evento.Service.IMPL;
 
 import com.example.Evento.DTO.Request.EventoRequestDTO;
 import com.example.Evento.DTO.Request.LugarRequestDTO;
+import com.example.Evento.DTO.Response.EstadoEventoResponseDTO;
 import com.example.Evento.DTO.Response.EventoResponseDTO;
 import com.example.Evento.DTO.Response.LugarResponseDTO;
 import com.example.Evento.Entity.EstadoEvento;
 import com.example.Evento.Entity.Evento;
 import com.example.Evento.Entity.Extends.Organizador;
 import com.example.Evento.Entity.Lugar;
+import com.example.Evento.Exceptions.ResourceNotFoundException;
 import com.example.Evento.Repository.EstadoEventoRepository;
 import com.example.Evento.Repository.EventoRepository;
 import com.example.Evento.Repository.LugarRepository;
@@ -31,21 +33,32 @@ public class EventoServiceIMPL implements EventoService {
     private final EstadoEventoRepository estadoEventoRepository;
 
     private EventoResponseDTO convertirADto(Evento e) {
-        LugarRequestDTO lugarDto = null;
+
+        LugarResponseDTO lugarDto = null;
         if (e.getLugar() != null) {
-            lugarDto = new LugarRequestDTO();
+            lugarDto = new LugarResponseDTO();
             lugarDto.setNombre(e.getLugar().getNombre());
             lugarDto.setDireccion(e.getLugar().getDireccion());
             lugarDto.setCapacidad(e.getLugar().getCapacidad());
         }
 
+        EstadoEventoResponseDTO estadoDto;
+        if (e.getEstado() != null) {
+            estadoDto = new EstadoEventoResponseDTO();
+            estadoDto.setNombre(e.getEstado().getNombre());
+        } else {
+            estadoDto = new EstadoEventoResponseDTO();
+            estadoDto.setNombre("Borrador");
+        }
+
+        String nombreOrganizador = e.getOrganizador() != null ? e.getOrganizador().getNombre() : "Desconocido";
         return new EventoResponseDTO(
                 e.getNombre(),
                 e.getDescripcion(),
                 e.getFechaHora(),
-                new LugarResponseDTO(),
-                e.getEstado() != null ? e.getEstado().getNombre() : "Borrador",
-                e.getOrganizador() != null ? e.getOrganizador().getNombre() : "Desconocido"
+                lugarDto,
+                estadoDto,
+                nombreOrganizador
         );
     }
 
@@ -65,10 +78,15 @@ public class EventoServiceIMPL implements EventoService {
 
     @Override
     public EventoResponseDTO crearEvento(EventoRequestDTO request) {
+
         Lugar lugar = lugarRepository.findById(request.getLugarId())
-                .orElseThrow(() -> new RuntimeException("Lugar no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lugar no encontrado"));
+
         Organizador organizador = organizadorRepository.findById(request.getOrganizadorId())
-                .orElseThrow(() -> new RuntimeException("Organizador no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Organizador no encontrado"));
+
+        EstadoEvento estado = estadoEventoRepository.findById(request.getEstadoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Estado de evento no encontrado"));
 
         Evento evento = new Evento();
         evento.setNombre(request.getNombre());
@@ -76,6 +94,7 @@ public class EventoServiceIMPL implements EventoService {
         evento.setFechaHora(request.getFechaHora());
         evento.setLugar(lugar);
         evento.setOrganizador(organizador);
+        evento.setEstado(estado);
 
         Evento guardado = eventoRepository.save(evento);
         return convertirADto(guardado);
@@ -84,27 +103,35 @@ public class EventoServiceIMPL implements EventoService {
     @Override
     public EventoResponseDTO actualizarEvento(Long id, EventoRequestDTO request) {
         Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado con ID: " + id));
 
         Lugar lugar = lugarRepository.findById(request.getLugarId())
-                .orElseThrow(() -> new RuntimeException("Lugar no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lugar no encontrado"));
+
+        Organizador organizador = organizadorRepository.findById(request.getOrganizadorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Organizador no encontrado"));
+
+        EstadoEvento estado = estadoEventoRepository.findById(request.getEstadoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado"));
 
         evento.setNombre(request.getNombre());
         evento.setDescripcion(request.getDescripcion());
         evento.setFechaHora(request.getFechaHora());
         evento.setLugar(lugar);
+        evento.setOrganizador(organizador);
+        evento.setEstado(estado);
 
         Evento actualizado = eventoRepository.save(evento);
         return convertirADto(actualizado);
     }
 
     @Override
-    public EventoResponseDTO publicarEvento(Long id) {
+    public EventoResponseDTO publicarEvento(Long id, EventoRequestDTO requestDTO) {
         Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado"));
 
-        EstadoEvento estadoPublicado = estadoEventoRepository.findById(Long.valueOf("PUB"))
-                .orElseThrow(() -> new RuntimeException("Estado 'Publicado' no encontrado en el catálogo"));
+        EstadoEvento estadoPublicado = estadoEventoRepository.findById(requestDTO.getEstadoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Estado 'Publicado' no encontrado en el catálogo"));
 
         evento.setEstado(estadoPublicado);
         Evento publicado = eventoRepository.save(evento);
@@ -114,7 +141,7 @@ public class EventoServiceIMPL implements EventoService {
     @Override
     public void eliminarEvento(Long id) {
         if (!eventoRepository.existsById(id)) {
-            throw new RuntimeException("Evento no encontrado");
+            throw new ResourceNotFoundException("Evento no encontrado");
         }
         eventoRepository.deleteById(id);
     }

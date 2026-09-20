@@ -1,4 +1,6 @@
 package com.example.Evento.DTO.Response;
+import com.example.Evento.DTO.Request.LugarRequestDTO;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,6 @@ public class EventoResponseDTO {
     private String descripcion;
     private LocalDateTime fechaHora;
     private LugarResponseDTO lugar;
-    private String estadoEvento;
+    private EstadoEventoResponseDTO estado;
     private String nombreOrganizador;
 }
