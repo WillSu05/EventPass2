@@ -22,9 +22,9 @@ public class TipoEntrada {
     @Column(name = "precio", nullable = false)
     private double precio;
     @Column(name = "cantidadTotal", nullable = false)
-    private int cantidadTotal;
+    private Integer cantidadTotal;
     @Column(name = "disponible", nullable = false)
-    private int disponible;
+    private Integer disponible;
 
     @JsonManagedReference
     @ToString.Exclude

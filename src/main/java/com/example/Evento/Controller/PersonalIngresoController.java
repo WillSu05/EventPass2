@@ -32,14 +32,4 @@ public class PersonalIngresoController {
         return ResponseEntity.ok(personalIngresoService.listarTodos());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PersonalIngresoResponseDTO> actualizar(@PathVariable Long id, @RequestBody PersonalIngresoRequestDTO dto) {
-        return ResponseEntity.ok(personalIngresoService.actualizar(id, dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        personalIngresoService.eliminar(id);
-        return ResponseEntity.noContent().build();
-    }
 }

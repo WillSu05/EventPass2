@@ -8,6 +8,6 @@ import lombok.*;
 public class TipoEntradaResponseDTO {
     private String nombre;
     private Double precio;
-    private int capacidadTotal;
+    private Integer capacidadTotal;
     private String nombreEvento;
 }

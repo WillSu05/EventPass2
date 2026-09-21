@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orden")
+@RequestMapping("/api/ordenes")
 @RequiredArgsConstructor
 public class OrdenController {
 
     private final OrdenService ordenService;
 
     @PostMapping
-    public ResponseEntity<OrdenResponseDTO> crear(@RequestBody OrdenRequestDTO dto) {
+    public ResponseEntity<OrdenResponseDTO> crearOrden(@RequestBody OrdenRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ordenService.crearOrden(dto));
     }
 
@@ -27,18 +27,23 @@ public class OrdenController {
         return ResponseEntity.ok(ordenService.obtenerPorId(id));
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<OrdenResponseDTO>> obtenerPorUsuario(@PathVariable Long usuarioId) {
-        return ResponseEntity.ok(ordenService.obtenerPorUsuario(usuarioId));
+    @GetMapping("/asistente/{asistenteId}")
+    public ResponseEntity<List<OrdenResponseDTO>> obtenerPorAsistente(@PathVariable Long asistenteId) {
+        return ResponseEntity.ok(ordenService.obtenerPorAsistente(asistenteId));
     }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<OrdenResponseDTO> cambiarEstado(@PathVariable Long id, @RequestParam String nuevoEstado) {
-        return ResponseEntity.ok(ordenService.cambiarEstado(id, nuevoEstado));
+    @PatchMapping("/{id}/pagar")
+    public ResponseEntity<OrdenResponseDTO> procesarPago(@PathVariable Long id) {
+        return ResponseEntity.ok(ordenService.procesarPago(id));
     }
 
     @PatchMapping("/{id}/cancelar")
-    public ResponseEntity<OrdenResponseDTO> cancelar(@PathVariable Long id) {
+    public ResponseEntity<OrdenResponseDTO> cancelarOrden(@PathVariable Long id) {
         return ResponseEntity.ok(ordenService.cancelarOrden(id));
+    }
+
+    @GetMapping("/asistente/{asistenteId}/total-comprado")
+    public ResponseEntity<Double> obtenerTotalComprado(@PathVariable Long asistenteId) {
+        return ResponseEntity.ok(ordenService.calcularTotalCompradoPorAsistente(asistenteId));
     }
 }

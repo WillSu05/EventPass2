@@ -32,14 +32,4 @@ public class OrganizadorController {
         return ResponseEntity.ok(organizadorService.listarTodos());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrganizadorResponseDTO> actualizar(@PathVariable Long id, @RequestBody OrganizadorRequestDTO dto) {
-        return ResponseEntity.ok(organizadorService.actualizar(id, dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        organizadorService.eliminar(id);
-        return ResponseEntity.noContent().build();
-    }
 }

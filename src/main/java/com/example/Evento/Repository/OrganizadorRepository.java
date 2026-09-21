@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface OrganizadorRepository extends JpaRepository<Organizador, Long> {
-    Optional<Organizador> findByEmail(String email);
-    boolean existsByEmail(String email);
+    Optional<Organizador> findByCorreo(String correo);
+    boolean existsByCorreo(String correo);;
 }
