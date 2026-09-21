@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tipos-entrada")
+@RequestMapping("/api/tipoEntrada")
 @RequiredArgsConstructor
 public class TipoEntradaController {
 

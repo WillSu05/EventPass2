@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "estado_evento")
+@Table(name = "estadoEvento")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
