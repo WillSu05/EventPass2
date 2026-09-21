@@ -12,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/lugares")
+@RequestMapping("/api/lugar")
 public class LugarController {
     private final LugarService lugarService;
 

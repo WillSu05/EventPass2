@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/eventos")
+@RequestMapping("/api/evento")
 @RequiredArgsConstructor
 public class EventoController {
     private final EventoService eventoService;
