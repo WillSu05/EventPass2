@@ -9,6 +9,4 @@ public interface OrganizadorService {
     OrganizadorResponseDTO registrar(OrganizadorRequestDTO dto);
     OrganizadorResponseDTO obtenerPorId(Long id);
     List<OrganizadorResponseDTO> listarTodos();
-    OrganizadorResponseDTO actualizar(Long id, OrganizadorRequestDTO dto);
-    void eliminar(Long id);
 }

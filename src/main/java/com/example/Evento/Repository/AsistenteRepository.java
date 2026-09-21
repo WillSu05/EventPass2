@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AsistenteRepository extends JpaRepository<Asistente, Long> {
-    Optional<Asistente> findByEmail(String email);
-    boolean existsByEmail(String email);
+    Optional<Asistente> findByCorreo(String correo);
+    boolean existsByCorreo(String correo);
 }

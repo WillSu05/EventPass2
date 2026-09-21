@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class TipoEntradaRequesDTO {
     private String nombre;
     private Double precio;
-    private int capacidadTotal;
+    private Integer capacidadTotal;
     private Long eventoId;
 }

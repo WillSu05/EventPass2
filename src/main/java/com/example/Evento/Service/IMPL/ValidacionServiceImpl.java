@@ -1,12 +1,13 @@
 package com.example.Evento.Service.IMPL;
 
 import com.example.Evento.DTO.Request.ValidacionRequestDTO;
+import com.example.Evento.DTO.Response.EstadisticasValidacionDTO;
 import com.example.Evento.DTO.Response.ValidacionResponseDTO;
 import com.example.Evento.Entity.Entrada;
-import com.example.Evento.Entity.Usuario;
+import com.example.Evento.Entity.Extends.PersonalIngreso;
 import com.example.Evento.Entity.Validacion;
 import com.example.Evento.Repository.EntradaRepository;
-import com.example.Evento.Repository.UsuarioRepository;
+import com.example.Evento.Repository.PersonalIngresoRepository;
 import com.example.Evento.Repository.ValidacionRepository;
 import com.example.Evento.Service.ValidacionService;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,13 @@ public class ValidacionServiceImpl implements ValidacionService {
 
     private final ValidacionRepository validacionRepository;
     private final EntradaRepository entradaRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final PersonalIngresoRepository personalIngresoRepository;
 
     @Override
     @Transactional
     public ValidacionResponseDTO validarEntrada(Long validadorId, ValidacionRequestDTO dto) {
-        Usuario validador = usuarioRepository.findById(validadorId)
-                .orElseThrow(() -> new RuntimeException("Validador/Usuario no encontrado con ID: " + validadorId));
+        PersonalIngreso validador = personalIngresoRepository.findById(validadorId)
+                .orElseThrow(() -> new RuntimeException("Personal de ingreso no encontrado con ID: " + validadorId));
 
         Entrada entrada = entradaRepository.findByCodigo(dto.getCodigoEntrada()).orElse(null);
 
@@ -38,20 +39,19 @@ public class ValidacionServiceImpl implements ValidacionService {
         validacion.setValidador(validador);
         validacion.setEntrada(entrada);
 
-        boolean yaIngresada = validacionRepository.existsByEntradaCodigoAndResultadoValidacion(dto.getCodigoEntrada(), "EXITOSO");
+        boolean yaIngresada = validacionRepository.existsByEntradaCodigoAndResultadoValidacion(
+                dto.getCodigoEntrada(), "EXITOSO"
+        );
 
-
-        if (entrada != null
+        boolean esValida = entrada != null
                 && entrada.getOrden() != null
+                && entrada.getOrden().getEstadoOrden() != null
                 && "PAGADO".equalsIgnoreCase(entrada.getOrden().getEstadoOrden().getNombre())
-                && !yaIngresada) {
+                && !yaIngresada;
 
-            validacion.setResultadoValidacion("EXITOSO");
-        } else {
-            validacion.setResultadoValidacion("RECHAZADO");
-        }
-
+        validacion.setResultadoValidacion(esValida ? "EXITOSO" : "RECHAZADO");
         Validacion guardada = validacionRepository.save(validacion);
+
         return mapToDTO(guardada);
     }
 
@@ -67,6 +67,19 @@ public class ValidacionServiceImpl implements ValidacionService {
         return validacionRepository.findByValidadorId(validadorId).stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EstadisticasValidacionDTO obtenerEstadisticasValidador(Long validadorId) {
+        List<Validacion> validaciones = validacionRepository.findByValidadorId(validadorId);
+
+        long total = validaciones.size();
+        long exitosos = validaciones.stream()
+                .filter(v -> "EXITOSO".equalsIgnoreCase(v.getResultadoValidacion()))
+                .count();
+        long rechazados = total - exitosos;
+
+        return new EstadisticasValidacionDTO(total, exitosos, rechazados);
     }
 
     private ValidacionResponseDTO mapToDTO(Validacion v) {

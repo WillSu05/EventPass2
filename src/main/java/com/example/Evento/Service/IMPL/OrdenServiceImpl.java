@@ -30,22 +30,21 @@ public class OrdenServiceImpl implements OrdenService {
     @Transactional
     public OrdenResponseDTO crearOrden(OrdenRequestDTO dto) {
         Asistente asistente = asistenteRepository.findById(dto.getAsistenteId())
-                .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Asistente no encontrado con ID: " + dto.getAsistenteId()));
 
         TipoEntrada tipoEntrada = tipoEntradaRepository.findById(dto.getTipoEntradaId())
-                .orElseThrow(() -> new RuntimeException("Tipo de entrada no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Tipo de entrada no encontrado con ID: " + dto.getTipoEntradaId()));
 
         if (tipoEntrada.getDisponible() < dto.getCantidad()) {
-            throw new IllegalStateException("Capacidad insuficiente para el tipo de entrada seleccionado");
+            throw new IllegalStateException("Stock insuficiente. Disponibles: " + tipoEntrada.getDisponible());
         }
 
-        // Descontar inventario
+        // Descontar inventario disponible
         tipoEntrada.setDisponible(tipoEntrada.getDisponible() - dto.getCantidad());
         tipoEntradaRepository.save(tipoEntrada);
 
-        // Estado inicial
         EstadoOrden estadoPendiente = estadoOrdenRepository.findByNombreIgnoreCase("PENDIENTE")
-                .orElseThrow(() -> new RuntimeException("Estado 'PENDIENTE' no encontrado en el sistema"));
+                .orElseThrow(() -> new RuntimeException("Estado 'PENDIENTE' no parametrizado en el sistema"));
 
         Orden orden = new Orden();
         orden.setFecha(LocalDateTime.now());
@@ -64,9 +63,7 @@ public class OrdenServiceImpl implements OrdenService {
         }
 
         orden.setEntradas(entradas);
-        Orden guardada = ordenRepository.save(orden);
-
-        return mapToDTO(guardada);
+        return mapToDTO(ordenRepository.save(orden));
     }
 
     @Override
@@ -77,22 +74,26 @@ public class OrdenServiceImpl implements OrdenService {
     }
 
     @Override
-    public List<OrdenResponseDTO> obtenerPorUsuario(Long usuarioId) {
-        return ordenRepository.findByUsuarioId(usuarioId).stream()
+    public List<OrdenResponseDTO> obtenerPorAsistente(Long asistenteId) {
+        return ordenRepository.findByUsuarioId(asistenteId).stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public OrdenResponseDTO cambiarEstado(Long ordenId, String nuevoEstado) {
+    public OrdenResponseDTO procesarPago(Long ordenId) {
         Orden orden = ordenRepository.findById(ordenId)
-                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada con ID: " + ordenId));
 
-        EstadoOrden estado = estadoOrdenRepository.findByNombreIgnoreCase(nuevoEstado)
-                .orElseThrow(() -> new RuntimeException("Estado '" + nuevoEstado + "' no válido"));
+        if (!"PENDIENTE".equalsIgnoreCase(orden.getEstadoOrden().getNombre())) {
+            throw new IllegalStateException("Solo se pueden pagar órdenes que se encuentren en estado PENDIENTE");
+        }
 
-        orden.setEstadoOrden(estado);
+        EstadoOrden estadoPagado = estadoOrdenRepository.findByNombreIgnoreCase("PAGADO")
+                .orElseThrow(() -> new RuntimeException("Estado 'PAGADO' no parametrizado en el sistema"));
+
+        orden.setEstadoOrden(estadoPagado);
         return mapToDTO(ordenRepository.save(orden));
     }
 
@@ -100,13 +101,13 @@ public class OrdenServiceImpl implements OrdenService {
     @Transactional
     public OrdenResponseDTO cancelarOrden(Long ordenId) {
         Orden orden = ordenRepository.findById(ordenId)
-                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada con ID: " + ordenId));
 
         if ("CANCELADO".equalsIgnoreCase(orden.getEstadoOrden().getNombre())) {
             throw new IllegalStateException("La orden ya se encuentra cancelada");
         }
 
-        // Devolver stock
+        // Devolución de stock al inventario
         if (orden.getEntradas() != null) {
             for (Entrada entrada : orden.getEntradas()) {
                 TipoEntrada tipo = entrada.getTipoEntrada();
@@ -118,10 +119,18 @@ public class OrdenServiceImpl implements OrdenService {
         }
 
         EstadoOrden estadoCancelado = estadoOrdenRepository.findByNombreIgnoreCase("CANCELADO")
-                .orElseThrow(() -> new RuntimeException("Estado 'CANCELADO' no configurado"));
+                .orElseThrow(() -> new RuntimeException("Estado 'CANCELADO' no parametrizado"));
 
         orden.setEstadoOrden(estadoCancelado);
         return mapToDTO(ordenRepository.save(orden));
+    }
+
+    @Override
+    public Double calcularTotalCompradoPorAsistente(Long asistenteId) {
+        return ordenRepository.findByUsuarioId(asistenteId).stream()
+                .filter(o -> o.getEstadoOrden() != null && "PAGADO".equalsIgnoreCase(o.getEstadoOrden().getNombre()))
+                .mapToDouble(Orden::getTotal)
+                .sum();
     }
 
     private OrdenResponseDTO mapToDTO(Orden o) {
@@ -145,6 +154,9 @@ public class OrdenServiceImpl implements OrdenService {
                 if (e.getTipoEntrada() != null) {
                     edto.setPrecio(e.getTipoEntrada().getPrecio());
                     edto.setTipoEntradaNombre(e.getTipoEntrada().getNombre());
+                    if (e.getTipoEntrada().getEvento() != null) {
+                        edto.setEventoTitulo(e.getTipoEntrada().getEvento().getNombre());
+                    }
                 }
                 return edto;
             }).collect(Collectors.toList()));

@@ -8,7 +8,8 @@ import java.util.List;
 public interface OrdenService {
     OrdenResponseDTO crearOrden(OrdenRequestDTO dto);
     OrdenResponseDTO obtenerPorId(Long ordenId);
-    List<OrdenResponseDTO> obtenerPorUsuario(Long usuarioId);
-    OrdenResponseDTO cambiarEstado(Long ordenId, String nuevoEstado);
+    List<OrdenResponseDTO> obtenerPorAsistente(Long asistenteId);
+    OrdenResponseDTO procesarPago(Long ordenId);
     OrdenResponseDTO cancelarOrden(Long ordenId);
+    Double calcularTotalCompradoPorAsistente(Long asistenteId);
 }

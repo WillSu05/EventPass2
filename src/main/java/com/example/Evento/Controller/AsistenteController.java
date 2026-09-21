@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/Asistente")
+@RequestMapping("/api/asistentes")
 @RequiredArgsConstructor
 public class AsistenteController {
 
@@ -29,17 +29,11 @@ public class AsistenteController {
 
     @GetMapping
     public ResponseEntity<List<AsistenteResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(asistenteService.listarTodos());
+        return ResponseEntity.ok(asistenteService.listartodos());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AsistenteResponseDTO> actualizar(@PathVariable Long id, @RequestBody AsistenteRequestDTO dto) {
-        return ResponseEntity.ok(asistenteService.actualizar(id, dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        asistenteService.eliminar(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}/ordenes-pendientes")
+    public ResponseEntity<Boolean> tieneOrdenesPendientes(@PathVariable Long id) {
+        return ResponseEntity.ok(asistenteService.tieneOrdenesPendientes(id));
     }
 }
